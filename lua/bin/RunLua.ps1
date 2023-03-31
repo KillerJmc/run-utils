@@ -31,7 +31,7 @@ if (-not (Test-Path $filePath))
 if ($filePath.EndsWith('.lua'))
 {
     # 临时Lua文件路径
-    $tmpLuaPath = [System.IO.Path]::GetTempPath() + 'temp.groovy'
+    $tmpLuaPath = [System.IO.Path]::GetTempPath() + 'temp.lua'
 
     # 转化源码的编码为系统编码并输出到临时Lua文件来解决编码问题
     cat -Encoding UTF8 $filePath | Out-File -Encoding default $tmpLuaPath

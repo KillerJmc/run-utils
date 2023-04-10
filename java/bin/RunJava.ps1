@@ -14,7 +14,7 @@ if ($args.Length -eq 0)
 {
     Write-Warning "请输入要执行的文件，只能是单个java文件或者jar文件。"
     pause; return
-} 
+}
 elseif ($args.Length -gt 1)
 {
     Write-Error "参数个数大于1！"
@@ -35,35 +35,35 @@ if (-not (Test-Path $filePath))
 }
 
 # 按情况执行
-if ($filePath.EndsWith('.jar'))
+if ($filePath.EndsWith(".jar"))
 {
     # 如果文件名以“-w”结尾，就用javaw执行
-    if ($fileName.EndsWith('-w')) 
+    if ($fileName.EndsWith("-w"))
     {
-        javaw `-cp ./*`;./lib/* -jar $tmpJavaPath
+        & "$env:JAVA_HOME\bin\javaw.exe" -cp `"".;./lib/*"`" -jar $filePath
         return
     }
 
-    java `-cp ./*`;./lib/* -jar $filePath
+    & "$env:JAVA_HOME\bin\java.exe" -cp `"".;./lib/*"`" -jar $filePath
 }
-elseif ($filePath.EndsWith('.java'))
+elseif ($filePath.EndsWith(".java"))
 {
     # 临时Java文件路径
-    $tmpJavaPath = [System.IO.Path]::GetTempPath() + 'Temp.java'
+    $tmpJavaPath = [System.IO.Path]::GetTempPath() + "Temp.java"
 
     # 转化源码的编码为系统编码并输出到临时Java文件来解决编码问题
     cat -Encoding UTF8 $filePath | Out-File -Encoding default $tmpJavaPath
-    
+
     # 如果文件名以“-w”结尾，就用javaw执行
-    if ($fileName.EndsWith('-w')) 
+    if ($fileName.EndsWith("-w"))
     {
-        javaw `-cp ./*`;./lib/* $tmpJavaPath
+        & "$env:JAVA_HOME\bin\javaw.exe" -cp `"".;./lib/*"`" $tmpJavaPath
         # 为了让程序顺利运行，不删除临时的Java文件
         return
     }
 
     # 执行临时Java文件（如果有外部依赖需要把所有jar包放在同级目录或同级的lib目录中）
-    java `-cp ./*`;./lib/* $tmpJavaPath
+    & "$env:JAVA_HOME\bin\java.exe" -cp `"".;./lib/*"`" $tmpJavaPath
 
     # 清除临时Java文件
     rm $tmpJavaPath

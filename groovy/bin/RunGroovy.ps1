@@ -35,16 +35,16 @@ if (-not (Test-Path $filePath))
 }
 
 # 执行groovy脚本
-if ($filePath.EndsWith('.groovy'))
+if ($filePath.EndsWith(".groovy"))
 {
     # 临时Groovy文件路径
-    $tmpGroovyPath = [System.IO.Path]::GetTempPath() + 'temp.groovy'
+    $tmpGroovyPath = [System.IO.Path]::GetTempPath() + "temp.groovy"
 
     # 转化源码的编码为系统编码并输出到临时Groovy文件来解决编码问题
     cat -Encoding UTF8 $filePath | Out-File -Encoding default $tmpGroovyPath
 
     # 执行临时Groovy文件（如果有外部依赖需要把所有jar包放在同级目录或同级的lib目录中）
-    cmd /c "`"$PSScriptRoot\..\env\groovy.cmd`" -cp `"lib/*;.`" $tmpGroovyPath"
+    & "$PSScriptRoot\..\env\groovy.cmd" -cp `""lib/*;."`" "$tmpGroovyPath"
 
     # 清除临时Groovy文件
     rm $tmpGroovyPath

@@ -28,16 +28,16 @@ if (-not (Test-Path $filePath))
 }
 
 # 执行lua脚本
-if ($filePath.EndsWith('.lua'))
+if ($filePath.EndsWith(".lua"))
 {
     # 临时Lua文件路径
-    $tmpLuaPath = [System.IO.Path]::GetTempPath() + 'temp.lua'
+    $tmpLuaPath = [System.IO.Path]::GetTempPath() + "temp.lua"
 
     # 转化源码的编码为系统编码并输出到临时Lua文件来解决编码问题
     cat -Encoding UTF8 $filePath | Out-File -Encoding default $tmpLuaPath
 
     # 执行临时Lua文件
-    cmd /c "`"$PSScriptRoot\..\env\lua.exe`" $tmpLuaPath"
+    & "$PSScriptRoot\..\env\lua.exe" "$tmpLuaPath"
 
     # 清除临时Lua文件
     rm $tmpLuaPath

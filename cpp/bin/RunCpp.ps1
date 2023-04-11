@@ -9,6 +9,9 @@ if ($env:MINGW_HOME.Length -eq 0)
     pause; return
 }
 
+# 在会话中添加MINGW所需的dll库文件
+$env:PATH += ";$env:MINGW_HOME\bin"
+
 # 参数只能有一个
 if ($args.Length -eq 0)
 {
@@ -50,11 +53,11 @@ if ($filePath.EndsWith(".cpp"))
     & "$env:MINGW_HOME/bin/g++.exe" -o "$tmpExePath" "$tmpCppPath"
 
     # 执行exe文件
-    & $tmpExePath
+    & "$tmpExePath"
 
     # 清除临时c文件和编译完的exe文件
-    rm $tmpCppPath
-    rm $tmpExePath
+    rm "$tmpCppPath"
+    rm "$tmpExePath"
 }
 else
 {

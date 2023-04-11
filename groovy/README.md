@@ -4,16 +4,10 @@
 
 ## Description
 
-This tool lets you run a single groovy script by double-click!
-
-## Usage
-
-1. Define **JAVA_HOME** as a System Environment Variable. 
-2. Clone this repository to anywhere on the disk you like.
-3. Double-click a .groovy file, specify `bin/RunGroovy.exe` as the default program to open.
-4. Enjoy it!
+This tool lets you run a groovy script by double-click!
 
 ## Notice
 
-Icon is from [here](https://commons.wikimedia.org/wiki/File:Groovy-logo.svg), If there is any infringement, please contact my email: `killerjmc@163.com`
+If the groovy script has **other** jar dependencies, please add them to **the same** directory 
+or the **lib** folder under the same directory.
 

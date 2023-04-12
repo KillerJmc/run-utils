@@ -38,9 +38,9 @@ function getAssociationNames($languageNames) {
 }
 
 # 构建扩展名依赖的.reg文件并执行
-function executeClearAssociationReg($asscoiationNames) {
+function executeClearAssociationReg($asscoiationNames, $installDir) {
     # 清除扩展名依赖的.reg文件路径
-    $regPath = "$PSScriptRoot\ClearFileAssociations.reg"
+    $regPath = "$installDir\bin\ClearFileAssociations.reg"
     # 清除扩展名依赖的.reg文件内容
     $content = "Windows Registry Editor Version 5.00"
     # 清除扩展名依赖的reg列内容
@@ -61,9 +61,8 @@ function executeClearAssociationReg($asscoiationNames) {
     # 输出内容到指定文件路径
     $content > $regPath
 
-    # 执行reg文件并删除
+    # 执行reg文件合并注册表
     regedit /s $regPath
-    rm $regPath
 }
 
 # 将run-utils文件夹复制到安装目录
@@ -136,11 +135,11 @@ $associationNames = getAssociationNames $languageNames
 
 echo "安装run-utils`n"
 
-echo "正在解除默认编程文件打开方式...`n"
-executeClearAssociationReg $associationNames
-
 echo "正在复制run-utils到安装目录...`n"
 copyRunUtilsToInstallDir $rootDir $installDir
+
+echo "正在解除默认编程文件打开方式...`n"
+executeClearAssociationReg $associationNames $installDir
 
 echo "正在构建exe文件到安装目录...`n"
 buildRunLanguageCmdExe $installDir $languageNames

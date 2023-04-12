@@ -121,7 +121,7 @@ function buildFileAssociations($languageNames, $associationNames, $installDir)
 }
 
 # run-utils文件夹路径
-$rootDir = "$PSScriptRoot\.."
+$rootDir = "$PSScriptRoot"
 
 # 安装路径
 $installDir = "C:\Program Files"

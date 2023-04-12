@@ -87,7 +87,7 @@ function buildRunLanguageCmdExe($installDir, $languageNames) {
     foreach ($languageName in $languageNames)
     {
         # 执行脚本来为每种编程语言构建cmd和exe文件
-        & "$scriptPath" "$languageName"
+        powershell -ExecutionPolicy Bypass -File "$scriptPath" "$languageName"
     }
 }
 

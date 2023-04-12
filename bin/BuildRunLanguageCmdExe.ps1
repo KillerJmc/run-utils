@@ -42,17 +42,22 @@ $runLanguageName = "Run" + $languageNameCapitalize
 # 生成cpp路径（RunXXX.cpp）
 $runLanguageCppPath = ".\$runLanguageName.cpp"
 
+# run-utils根路径
+$rootPath = "$PSScriptRoot\.."
+# 切换路径
+cd $rootPath
+
 # 生成cmd路径（RunXXX.cmd）
-$runLanguageCmdPath = "$PSScriptRoot\..\$languageName\bin\$runLanguageName.cmd"
+$runLanguageCmdPath = "$languageName\bin\$runLanguageName.cmd"
 
 # 生成exe路径（RunXXX.exe）
-$exePath = "$PSScriptRoot\..\$languageName\bin\$runLanguageName.exe"
+$exePath = "$languageName\bin\$runLanguageName.exe"
 
 # 图标资源导向文件的路径（icon.rc）
-$iconRcPath = "$PSScriptRoot\..\$languageName\res\icon.rc"
+$iconRcPath = "$languageName\res\icon.rc"
 
 # 生成图标资源文件路径（icon.o）
-$iconResPath = "$PSScriptRoot\..\$languageName\res\icon.o"
+$iconResPath = "$languageName\res\icon.o"
 
 # RunXXX.cmd的内容
 $runLanguageCmdContent = @"
@@ -99,16 +104,16 @@ int main(int argc, char* argv[])
 "@.Replace("?", $runLanguageName)
 
 # 将RunXXX.cmd内容输出到目标路径
-$runLanguageCmdContent | Out-File -Encoding utf8 $runLanguageCmdPath
+$runLanguageCmdContent | Out-File -Encoding default "$runLanguageCmdPath"
 
 # 将临时cpp内容写入.cpp文件
-$runLanguageCppContent | Out-File -Encoding utf8 $runLanguageCppPath
+$runLanguageCppContent | Out-File -Encoding default "$runLanguageCppPath"
 
 # 生成图标资源文件（icon.o）
-& "$env:MINGW_HOME\bin\windres.exe" $iconRcPath -O coff -o $iconResPath
+& "$env:MINGW_HOME\bin\windres.exe" "$iconRcPath" -O coff -o "$iconResPath"
 
 # 生成带图标的exe
-& "$env:MINGW_HOME\bin\g++.exe" -static -o $exePath $runLanguageCppPath $iconResPath
+& "$env:MINGW_HOME\bin\g++.exe" -static -o "$exePath" "$runLanguageCppPath" "$iconResPath"
 
 # 删除临时cpp文件和图标资源文件
 rm "$runLanguageCppPath"

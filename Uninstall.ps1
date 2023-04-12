@@ -11,7 +11,7 @@ if (-not ([System.Security.Principal.WindowsIdentity]::GetCurrent().groups -matc
 # 获取语言名称列表
 function getLanguageNames($rootDir) {
     # 遍历时排除文件夹列表
-    $excludeDirList = ".idea", "bin"
+    $excludeDirList = ".git", ".idea", "bin"
     # 通过遍历仓库文件夹，获取语言名称列表
     return ls -directory -exclude $excludeDirList $rootDir | select -expand name
 }
@@ -56,9 +56,8 @@ function removeLanguageFileAssociations($languageNames, $associationNames)
 # 从安装目录删除run-utils文件夹
 function deleteRunUtilsFromInstallDir($installDir) {
     # 如果存在安装目录，进行删除
-    $runUtilsDir = "$installDir\run-utils"
-    if (Test-Path $runUtilsDir) {
-        rm -r -force $runUtilsDir
+    if (Test-Path $installDir) {
+        rm -r -force $installDir
     }
 }
 
@@ -66,7 +65,7 @@ function deleteRunUtilsFromInstallDir($installDir) {
 $rootDir = "$PSScriptRoot"
 
 # 安装路径
-$installDir = "C:\Program Files"
+$installDir = "C:\Program Files\run-utils"
 
 # 语言名称列表
 $languageNames = getLanguageNames $rootDir

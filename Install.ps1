@@ -11,7 +11,7 @@ if (-not ([System.Security.Principal.WindowsIdentity]::GetCurrent().groups -matc
 # 获取语言名称列表
 function getLanguageNames($rootDir) {
     # 遍历时排除文件夹列表
-    $excludeDirList = ".idea", "bin"
+    $excludeDirList = ".git", ".idea", "bin"
     # 通过遍历仓库文件夹，获取语言名称列表
     return ls -directory -exclude $excludeDirList $rootDir | select -expand name
 }
@@ -69,19 +69,21 @@ function executeClearAssociationReg($asscoiationNames) {
 # 将run-utils文件夹复制到安装目录
 function copyRunUtilsToInstallDir($rootDir, $installDir) {
     # 如果存在旧的安装目录，进行删除
-    $oldInstallLocation = "$installDir\run-utils"
-    if (Test-Path $oldInstallLocation) {
-        rm -r -force $oldInstallLocation
+    if (Test-Path $installDir) {
+        rm -r -force $installDir
     }
 
+    # 创建新的安装目录
+    mkdir $installDir | Out-Null
+
     # 复制run-utils文件夹到安装目录
-    cp -r -force $rootDir $installDir
+    cp -r -force $rootDir\* $installDir
 }
 
 # 通过编程语言名称构建RunXXX.exe和RunXXX.cmd到安装目录
 function buildRunLanguageCmdExe($installDir, $languageNames) {
     # 要执行的脚本路径
-    $scriptPath = "$installDir\run-utils\bin\BuildRunLanguageCmdExe.ps1"
+    $scriptPath = "$installDir\bin\BuildRunLanguageCmdExe.ps1"
     foreach ($languageName in $languageNames)
     {
         # 执行脚本来为每种编程语言构建cmd和exe文件
@@ -98,7 +100,7 @@ function buildFileAssociations($languageNames, $associationNames, $installDir)
         $languageNameCapitalize = $languageName.Substring(0, 1).ToUpper() + $languageName.Substring(1)
 
         # 执行cmd构建ftype（打开方式）
-        cmd /c "ftype RunUtils.$languageName=`"$installDir\run-utils\$languageName\bin\Run$languageNameCapitalize.exe`" `"%1`"" | Out-Null
+        cmd /c "ftype RunUtils.$languageName=`"$installDir\$languageName\bin\Run$languageNameCapitalize.exe`" `"%1`"" | Out-Null
     }
 
     # 扩展名到编程语言名称的映射表（特指扩展名和语言名称不同的）
@@ -124,7 +126,7 @@ function buildFileAssociations($languageNames, $associationNames, $installDir)
 $rootDir = "$PSScriptRoot"
 
 # 安装路径
-$installDir = "C:\Program Files"
+$installDir = "C:\Program Files\run-utils"
 
 # 语言名称列表
 $languageNames = getLanguageNames $rootDir
